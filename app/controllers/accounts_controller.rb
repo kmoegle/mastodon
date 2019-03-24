@@ -63,7 +63,12 @@ class AccountsController < ApplicationController
   end
 
   def default_statuses
-    @account.statuses.where(visibility: [:public, :unlisted])
+    # local modification: do not show any toots if user is not locally logged in
+    if current_user.nil?
+      @account.statuses.where(visibility: [])
+    else
+      @account.statuses.where(visibility: [:public, :unlisted])
+    end
   end
 
   def only_media_scope
